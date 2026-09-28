@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>恐懼刻進石頭裡｜義大利極東邊境的鄂圖曼陰影</title>
+<meta name="theme-color" content="#7a2e22">
+<meta name="description" content="鄂圖曼帝國的勢力邊界，與弗留利、伊斯特拉、卡尼奧拉為了防禦而蓋出的星形要塞、防禦教堂、警戒塔——義大利極東行程的支線研究">
+<meta property="og:type" content="website">
+<meta property="og:title" content="恐懼刻進石頭裡——義大利極東邊境的鄂圖曼陰影">
+<meta property="og:description" content="這片土地從未被鄂圖曼統治，卻被突襲的恐懼刻進了建築裡：星形要塞、防禦教堂、警戒塔鏈的故事">
+<meta property="og:image" content="https://maskywg.github.io/ottoman-frontier-shadow/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://maskywg.github.io/ottoman-frontier-shadow/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="恐懼刻進石頭裡——義大利極東邊境的鄂圖曼陰影">
+<meta name="twitter:description" content="鄂圖曼帝國的勢力邊界，與這片土地為了防禦而蓋出的星形要塞、防禦教堂、警戒塔">
+<meta name="twitter:image" content="https://maskywg.github.io/ottoman-frontier-shadow/og-image.jpg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #faf7f2;
+    --card: #ffffff;
+    --border: #e6ded2;
+    --text: #201a14;
+    --muted: #6b6055;
+    --hint: #a89a8a;
+    --rust: #7a2e22;
+    --rust-light: #f5e5e0;
+    --gold: #8a6a2a;
+    --gold-light: #f5ecd8;
+    --teal: #1f4d5c;
+    --teal-light: #e5eef0;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  header {
+    background: linear-gradient(135deg, #3a1a14, #7a2e22);
+    color: #f5ecd8;
+    padding: 3.5rem 1.5rem 3rem;
+    text-align: center;
+  }
+
+  header .kicker { font-size: 0.75rem; letter-spacing: 0.15em; opacity: 0.75; margin-bottom: 0.8rem; }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 1rem;
+  }
+
+  header p.lede { max-width: 640px; margin: 0 auto; font-size: 0.92rem; line-height: 1.9; opacity: 0.85; font-weight: 300; }
+
+  .backlink {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem;
+    font-size: 0.8rem; color: rgba(245,236,216,0.75); text-decoration: none;
+    border: 1px solid rgba(245,236,216,0.3); padding: 6px 16px; border-radius: 20px; transition: all 0.15s;
+  }
+  .backlink:hover { background: rgba(245,236,216,0.1); color: #f5ecd8; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  section { margin-bottom: 3.5rem; }
+
+  .section-kicker {
+    font-size: 0.72rem; letter-spacing: 0.12em; color: var(--rust);
+    background: var(--rust-light); display: inline-block; padding: 3px 12px; border-radius: 12px; margin-bottom: 0.7rem;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.6rem;
+  }
+
+  .section-intro { font-size: 0.88rem; color: var(--muted); line-height: 1.9; max-width: 680px; margin-bottom: 1.5rem; }
+
+  /* 時間軸 */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--border);
+  }
+  .tl-item { position: relative; padding-bottom: 1.4rem; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -28px; top: 3px; width: 15px; height: 15px; border-radius: 50%;
+    background: var(--card); border: 3px solid var(--rust);
+  }
+  .tl-item.peak .tl-dot { border-color: var(--gold); background: var(--gold); }
+  .tl-year { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.05rem; color: var(--rust); }
+  .tl-item.peak .tl-year { color: var(--gold); }
+  .tl-desc { font-size: 0.85rem; color: var(--muted); margin-top: 2px; line-height: 1.8; }
+
+  /* 地圖 */
+  .map-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  #era-map { height: 420px; }
+  .map-controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--border); background: #fdfbf8; }
+  .era-btn {
+    font-size: 0.78rem; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: #fff; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .era-btn:hover { border-color: var(--rust); color: var(--rust); }
+  .era-btn.active { background: var(--rust); color: #fff; border-color: var(--rust); }
+  .map-legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 16px; font-size: 0.72rem; color: var(--muted); }
+  .map-legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .map-note { font-size: 0.72rem; color: var(--hint); padding: 0 16px 12px; line-height: 1.7; }
+
+  /* 防禦遺跡 */
+  .relic-card {
+    display: grid; grid-template-columns: 240px 1fr; gap: 0; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.2rem;
+  }
+  .relic-photo { width: 100%; height: 100%; min-height: 180px; object-fit: cover; display: block; }
+  .relic-body { padding: 1.1rem 1.3rem; }
+  .relic-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 3px; }
+  .relic-loc { font-size: 0.75rem; color: var(--hint); margin-bottom: 8px; }
+  .relic-tag {
+    display: inline-block; font-size: 0.68rem; background: var(--gold-light); color: var(--gold);
+    padding: 2px 9px; border-radius: 10px; margin-bottom: 8px;
+  }
+  .relic-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.85; }
+
+  @media (max-width: 560px) {
+    .relic-card { grid-template-columns: 1fr; }
+    .relic-photo { height: 180px; min-height: 0; }
+  }
+
+  /* 尾聲雙圖 */
+  .coda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .coda-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .coda-photo { width: 100%; height: 200px; object-fit: cover; display: block; }
+  .coda-body { padding: 0.9rem 1.1rem; }
+  .coda-title { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+  .coda-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.8; }
+  @media (max-width: 560px) { .coda-grid { grid-template-columns: 1fr; } }
+
+  footer {
+    text-align: center; padding: 2.5rem 1.5rem; font-size: 0.72rem; color: var(--hint);
+    border-top: 1px solid var(--border); line-height: 2;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">MOVING LECTURE · OTTOMAN FRONTIER</div>
+  <h1>恐懼刻進石頭裡</h1>
+  <p class="lede">這片土地從未被鄂圖曼帝國統治過，卻被突襲的恐懼刻進了建築裡——星形要塞、帶城牆的教堂、山頭警戒塔，全都是四百年前那場長期威脅留下的疤痕。這是「義大利極東・移動講堂」的支線研究，把鄂圖曼勢力的真實邊界，與這片土地的防禦記憶收進同一份誌。</p>
+  <a class="backlink" href="https://maskywg.github.io/friuli-far-east/" target="_blank" rel="noopener noreferrer">← 回主行程網頁</a>
+</header>
+
+<main>
+
+  <section>
+    <div class="section-kicker">TIMELINE</div>
+    <h2>鄂圖曼擴張兩百五十年</h2>
+    <p class="section-intro">從君士坦丁堡陷落到維也納城下撤退，鄂圖曼的勢力線始終沒有真正跨過這條路線——但每一次逼近，都讓威尼斯與哈布斯堡更用力地把邊境蓋成石頭。</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1453</div>
+        <div class="tl-desc">鄂圖曼攻陷君士坦丁堡，拜占庭帝國滅亡，鄂圖曼帝國進入全盛擴張期。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1459</div>
+        <div class="tl-desc">塞爾維亞併入鄂圖曼版圖。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1463</div>
+        <div class="tl-desc">波士尼亞陷落，開啟長達四百餘年的鄂圖曼統治——這也是波士尼亞至今仍有大量清真寺與土耳其式石橋的原因。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1470s–1490s</div>
+        <div class="tl-desc">鄂圖曼輕騎兵（akıncı）開始頻繁翻越邊境，深入弗留利與卡尼奧拉（今斯洛維尼亞）突襲，燒殺擄掠、劫走人口，但從未在此建立統治——這是純粹的恐怖突襲，不是征服。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1482</div>
+        <div class="tl-desc">赫塞哥維納併入鄂圖曼版圖。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1493</div>
+        <div class="tl-desc">克爾巴瓦平原之役（Battle of Krbava Field），克羅埃西亞－匈牙利聯軍慘敗，克羅埃西亞內陸門戶洞開，此後逐步淪陷，只剩薩格勒布周邊「殘存中的殘存」（reliquiae reliquiarum）未被拿下。</div>
+      </div>
+      <div class="tl-item peak">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1499</div>
+        <div class="tl-desc">鄂圖曼騎兵史上最深入的一次突襲，一路打到威尼斯潟湖邊緣，據說能望見聖馬可鐘樓——這是鄂圖曼兵鋒抵達這片土地的最西端，此後再也沒有更深入過。</div>
+      </div>
+      <div class="tl-item peak">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1529</div>
+        <div class="tl-desc">第一次維也納之圍，鄂圖曼大軍首度兵臨中歐核心，最終因補給線過長而撤退。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1593</div>
+        <div class="tl-desc">威尼斯共和國動工興建帕瑪諾瓦九角星形要塞城——這是對半世紀突襲恐懼最堅硬的建築回應。</div>
+      </div>
+      <div class="tl-item peak">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1683</div>
+        <div class="tl-desc">第二次維也納之圍，鄂圖曼帝國在中歐擴張的最高水位線；波蘭國王索別斯基率援軍擊潰圍城大軍，此戰之後鄂圖曼再未能深入中歐。</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1699</div>
+        <div class="tl-desc">《卡爾洛維茨條約》簽訂，鄂圖曼帝國首次大規模割讓歐洲領土，長達兩百年的退卻自此展開。</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">MAP COMPARISON</div>
+    <h2>勢力邊界，四個年代的對照</h2>
+    <p class="section-intro">點擊下方按鈕切換年代，看鄂圖曼、威尼斯、哈布斯堡三方勢力如何在這片土地上此消彼長——地圖為示意繪製，用來呈現大致範圍與趨勢，非精確歷史測繪。</p>
+    <div class="map-card">
+      <div class="map-controls" id="era-controls"></div>
+      <div id="era-map"></div>
+      <div class="map-legend">
+        <span><span class="sw" style="background:#c0392b"></span>鄂圖曼帝國</span>
+        <span><span class="sw" style="background:#1f6b5c"></span>威尼斯共和國</span>
+        <span><span class="sw" style="background:#8a6a2a"></span>哈布斯堡領地</span>
+        <span><span class="sw" style="background:#5a4a8a"></span>未被征服的克羅埃西亞殘部</span>
+      </div>
+      <div class="map-note">＊疆界為示意繪製，用來呈現趨勢與規模對照，非精確歷史測繪；1499 年突襲最深入點已於地圖上標出。</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">DEFENSIVE RELICS</div>
+    <h2>恐懼蓋出來的建築</h2>
+    <p class="section-intro">從義大利到蒙特內哥羅，威尼斯共和國沿著整條亞德里亞海岸線，築起一整條對抗鄂圖曼的防禦網——其中兩座，就在義大利極東行程的路線上。</p>
+
+    <div class="relic-card">
+      <img class="relic-photo" src="img/palmanova.jpg" alt="帕瑪諾瓦衛星空照">
+      <div class="relic-body">
+        <div class="relic-name">帕瑪諾瓦 Palmanova</div>
+        <div class="relic-loc">義大利・弗留利 · 主行程 Day 4</div>
+        <div class="relic-tag">1593 年動工</div>
+        <p class="relic-desc">威尼斯共和國打造的完美九角星形要塞城，是對半世紀突襲恐懼最堅硬的回應。UNESCO「威尼斯防禦工事」世界遺產系列的一員，與貝加莫、札達爾、希貝尼克、科托爾同屬一條防線。</p>
+      </div>
+    </div>
+
+    <div class="relic-card">
+      <img class="relic-photo" src="img/hrastovlje.jpg" alt="拉斯托維耶聖三一教堂防禦城牆">
+      <div class="relic-body">
+        <div class="relic-name">拉斯托維耶聖三一教堂</div>
+        <div class="relic-loc">斯洛維尼亞 · 主行程 Day 11</div>
+        <div class="relic-tag">15–16 世紀「tabor」防禦教堂</div>
+        <p class="relic-desc">斯洛維尼亞把這段突襲時期稱為「turški vpadi」（土耳其突襲）。鄉間教堂紛紛加蓋防禦城牆與瞭望孔，村民一聽警報就躲進教堂圍牆避難——拉斯托維耶是保存最完整的一座，你會在牆上親眼看到那些射擊孔。</p>
+      </div>
+    </div>
+
+    <div class="relic-card">
+      <img class="relic-photo" src="img/sibenik.jpg" alt="希貝尼克聖尼可拉堡壘空照">
+      <div class="relic-body">
+        <div class="relic-name">希貝尼克聖尼可拉堡壘</div>
+        <div class="relic-loc">克羅埃西亞・希貝尼克（不在本次行程）</div>
+        <div class="relic-tag">1540 年代興建</div>
+        <p class="relic-desc">扼守希貝尼克港灣入口的三角形堡壘，由威尼斯派駐工程師設計，同屬「威尼斯防禦工事」世界遺產系列——從空中俯瞰，能清楚看出它如何用最小的接觸面對抗艦砲攻擊。</p>
+      </div>
+    </div>
+
+    <div class="relic-card">
+      <img class="relic-photo" src="img/zadar.jpg" alt="札達爾城牆上的聖馬可飛獅浮雕">
+      <div class="relic-body">
+        <div class="relic-name">札達爾城牆・聖馬可飛獅</div>
+        <div class="relic-loc">克羅埃西亞・札達爾（不在本次行程）</div>
+        <div class="relic-tag">威尼斯共和國紋章</div>
+        <p class="relic-desc">城門上這隻展翅的飛獅，正是威尼斯共和國的守護聖人聖馬可的象徵——每一座被威尼斯重新武裝的海岸城市，城牆上幾乎都能找到這隻獅子，等於是威尼斯在說「這裡我們守得住」。</p>
+      </div>
+    </div>
+
+    <div class="relic-card">
+      <img class="relic-photo" src="img/kotor.jpg" alt="科托爾山城城牆">
+      <div class="relic-body">
+        <div class="relic-name">科托爾城牆</div>
+        <div class="relic-loc">蒙特內哥羅・科托爾灣（不在本次行程）</div>
+        <div class="relic-tag">整條防線最南端</div>
+        <p class="relic-desc">城牆沿著陡峭山壁一路攀上聖若望山，長達 4.5 公里，是整條「威尼斯防禦工事」中規模最壯觀的一段——也是這條反鄂圖曼防線的最南端終點。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-kicker">CODA</div>
+    <h2>圍城的兩端：誰在敲門，敲到了哪裡</h2>
+    <div class="coda-grid">
+      <div class="coda-item">
+        <img class="coda-photo" src="img/vienna1683.jpg" alt="1683年維也納之戰油畫">
+        <div class="coda-body">
+          <div class="coda-title">1683 維也納之圍</div>
+          <div class="coda-desc">鄂圖曼帝國在中歐擴張的最高水位線，也是它由盛轉衰的轉捩點——此戰之後，退卻持續了整整兩百年。</div>
+        </div>
+      </div>
+      <div class="coda-item">
+        <img class="coda-photo" src="img/akinci.jpg" alt="鄂圖曼輕騎兵細密畫">
+        <div class="coda-body">
+          <div class="coda-title">Akıncı 輕騎兵</div>
+          <div class="coda-desc">16 世紀鄂圖曼手抄本細密畫中的輕騎兵——正是這種來去如風的突襲部隊，讓弗留利與卡尼奧拉花了整整一個世紀蓋防禦工事。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const eras = [
+  {
+    id: '1463', label: '1463・波士尼亞陷落',
+    ottoman: [[42.0,17.5],[44.8,17.0],[45.3,19.5],[43.5,22.5],[41.5,22.0],[40.0,20.0],[40.5,17.8]],
+    venice: [[45.5,12.2],[46.1,13.5],[45.9,14.3],[44.9,14.9],[44.1,15.5],[42.6,18.1],[42.0,18.9],[41.7,18.4],[43.5,16.3],[45.0,13.0]],
+    habsburg: [[47.5,13.0],[48.5,16.5],[46.6,16.0],[46.0,14.6],[46.3,13.3]],
+    note: '波士尼亞剛陷落，鄂圖曼勢力尚未逼近本次行程的路線；弗留利、伊斯特拉、卡尼奧拉都還相對平靜。'
+  },
+  {
+    id: '1493', label: '1493・克爾巴瓦之役',
+    ottoman: [[42.0,17.5],[45.0,16.5],[45.6,19.0],[44.0,23.0],[41.5,23.0],[40.0,20.0],[40.5,17.8]],
+    venice: [[45.5,12.2],[46.1,13.5],[45.9,14.3],[44.9,14.9],[44.1,15.5],[42.6,18.1],[42.0,18.9],[41.7,18.4],[43.5,16.3],[45.0,13.0]],
+    habsburg: [[47.5,13.0],[48.5,16.5],[46.5,15.8],[46.0,14.6],[46.3,13.3]],
+    croatiaRump: [[45.5,15.4],[45.9,16.3],[45.4,16.7],[45.0,16.0],[45.2,15.4]],
+    raid: [45.35, 12.42],
+    note: '克爾巴瓦平原之役慘敗，克羅埃西亞內陸門戶洞開；鄂圖曼輕騎兵同時期開始深入突襲弗留利與卡尼奧拉，紅色箭頭標出 1499 年最深入的一次突襲，逼近威尼斯潟湖邊緣。'
+  },
+  {
+    id: '1593', label: '1593・帕瑪諾瓦動工',
+    ottoman: [[42.0,17.5],[45.2,16.3],[45.8,19.5],[44.0,23.5],[41.0,23.5],[39.8,20.5],[40.3,17.8]],
+    venice: [[45.5,12.2],[46.1,13.5],[45.9,14.3],[44.9,14.9],[44.1,15.5],[42.6,18.1],[42.0,18.9],[41.7,18.4],[43.5,16.3],[45.0,13.0]],
+    habsburg: [[47.5,13.0],[48.5,16.5],[46.4,15.5],[46.0,14.6],[46.3,13.3]],
+    croatiaRump: [[45.6,15.5],[45.9,16.3],[45.4,16.6],[45.1,16.0],[45.3,15.4]],
+    forts: [[45.906,13.31,'帕瑪諾瓦'],[45.79,14.13,'普列加馬'],[45.44,15.9,'希貝尼克'],[44.12,15.23,'札達爾'],[42.42,18.77,'科托爾']],
+    note: '威尼斯的整條反鄂圖曼防線在此時已大致成形：帕瑪諾瓦、希貝尼克、札達爾、科托爾，用同一套星形要塞邏輯串成一條海岸防線。'
+  },
+  {
+    id: '1699', label: '1699・卡爾洛維茨條約',
+    ottoman: [[42.5,18.5],[44.8,18.0],[45.0,20.5],[44.0,23.5],[41.0,23.5],[39.8,20.5],[40.5,18.5]],
+    venice: [[45.5,12.2],[46.1,13.5],[45.9,14.3],[44.9,14.9],[44.1,15.5],[42.6,18.1],[42.0,18.9],[41.7,18.4],[43.5,16.3],[45.0,13.0]],
+    habsburg: [[47.5,13.0],[48.5,16.5],[46.0,16.5],[45.3,15.5],[45.5,14.6],[46.0,14.6],[46.3,13.3]],
+    note: '《卡爾洛維茨條約》簽訂，鄂圖曼首度大規模割地，哈布斯堡勢力大舉南擴至克羅埃西亞、匈牙利全境——退卻的兩百年自此展開。'
+  },
+];
+
+let map, layers = {};
+
+function initMap() {
+  map = L.map('era-map', { scrollWheelZoom: false }).setView([44.3, 16.5], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  // 行程路線標記（固定顯示）
+  const routeSpots = [
+    [46.00, 13.33, '弗留利（住宿地）'],
+    [46.37, 14.11, '布萊德'],
+    [45.65, 13.78, '特里埃斯特'],
+    [45.53, 13.57, '皮蘭'],
+  ];
+  routeSpots.forEach(([lat, lon, name]) => {
+    L.circleMarker([lat, lon], { radius: 5, color: '#1f4d5c', fillColor: '#1f4d5c', fillOpacity: 0.9, weight: 2 })
+      .addTo(map).bindPopup(`<b>${name}</b><br>本次行程路線`);
+  });
+
+  const controls = document.getElementById('era-controls');
+  eras.forEach((era, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'era-btn' + (idx === 0 ? ' active' : '');
+    btn.textContent = era.label;
+    btn.onclick = () => selectEra(idx);
+    controls.appendChild(btn);
+    era._btn = btn;
+  });
+
+  selectEra(0);
+}
+
+function clearLayers() {
+  Object.values(layers).forEach(l => map.removeLayer(l));
+  layers = {};
+}
+
+function selectEra(idx) {
+  clearLayers();
+  eras.forEach(e => e._btn.classList.remove('active'));
+  const era = eras[idx];
+  era._btn.classList.add('active');
+
+  layers.ottoman = L.polygon(era.ottoman, { color: '#c0392b', fillColor: '#c0392b', fillOpacity: 0.28, weight: 1.5 }).addTo(map);
+  layers.venice = L.polygon(era.venice, { color: '#1f6b5c', fillColor: '#1f6b5c', fillOpacity: 0.28, weight: 1.5 }).addTo(map);
+  layers.habsburg = L.polygon(era.habsburg, { color: '#8a6a2a', fillColor: '#8a6a2a', fillOpacity: 0.22, weight: 1.5 }).addTo(map);
+
+  if (era.croatiaRump) {
+    layers.rump = L.polygon(era.croatiaRump, { color: '#5a4a8a', fillColor: '#5a4a8a', fillOpacity: 0.35, weight: 1.5, dashArray: '3 4' }).addTo(map);
+  }
+
+  if (era.raid) {
+    layers.raid = L.marker(era.raid, {
+      icon: L.divIcon({ className: '', html: '<div style="font-size:22px;transform:translate(-50%,-100%)">⚔️</div>', iconSize: [0,0] })
+    }).addTo(map).bindPopup('<b>1499 年突襲最深入點</b><br>鄂圖曼騎兵曾一路打到這裡，逼近威尼斯潟湖');
+  }
+
+  if (era.forts) {
+    layers.forts = L.layerGroup(era.forts.map(([lat, lon, name]) =>
+      L.circleMarker([lat, lon], { radius: 6, color: '#7a2e22', fillColor: '#7a2e22', fillOpacity: 0.9, weight: 2 })
+        .bindPopup(`<b>${name}</b><br>威尼斯反鄂圖曼防線據點`)
+    )).addTo(map);
+  }
+
+  let noteEl = document.getElementById('era-note');
+  if (!noteEl) {
+    noteEl = document.createElement('div');
+    noteEl.id = 'era-note';
+    noteEl.style.cssText = 'padding:10px 16px;font-size:0.78rem;color:#6b6055;background:#fdfbf8;border-top:1px solid #e6ded2;line-height:1.8';
+    document.querySelector('.map-card').insertBefore(noteEl, document.querySelector('.map-legend'));
+  }
+  noteEl.textContent = era.note;
+}
+
+window.addEventListener('load', () => setTimeout(initMap, 100));
+</script>
+
+<footer>
+  照片來源：Wikimedia Commons，依序為 Palmanova 衛星影像（公有領域）、Hrastovlje 防禦城牆（Zairon，CC BY-SA 4.0）、希貝尼克聖尼可拉堡壘空拍（Carsten Steger，CC BY-SA 4.0）、札達爾聖馬可飛獅（Kenneg22，CC BY 4.0）、科托爾城牆（Ingo Mehling，CC BY-SA 4.0）、1683 維也納之戰油畫（公有領域）、鄂圖曼輕騎兵細密畫《蘇萊曼記》（公有領域）<br>
+  本頁為「義大利極東・移動講堂」的支線研究頁面 · <a href="https://maskywg.github.io/friuli-far-east/" target="_blank" rel="noopener noreferrer" style="color:var(--rust)">回主行程網頁</a>
+</footer>
+
+</body>
+</html>
